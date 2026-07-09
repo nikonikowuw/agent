@@ -1,0 +1,191 @@
+{
+  "providers": {
+    "Chinese": {
+      "api": "openai-completions",
+      "baseUrl": "https://sub.nikoniko.us.ci/v1",
+      "apiKey": "$SUB2API_OTHER",
+      "authHeader": true,
+      "headers": {
+        "User-Agent": "claude-cli/2.1.177 (external, cli)"
+      },
+      "models": [
+        {
+          "id": "deepseek-v4-flash",
+          "name": "DeepSeek V4 Flash",
+          "reasoning": true,
+          "input": [
+            "text"
+          ],
+          "contextWindow": 1000000,
+          "maxTokens": 384000,
+          "cost": {
+            "input": 0.14,
+            "output": 0.28,
+            "cacheRead": 0.0028,
+            "cacheWrite": 0
+          },
+          "compat": {
+            "requiresReasoningContentOnAssistantMessages": true,
+            "supportsDeveloperRole": false,
+            "thinkingFormat": "deepseek",
+            "reasoningEffortMap": {
+              "minimal": "high",
+              "low": "high",
+              "medium": "high",
+              "high": "high",
+              "xhigh": "max"
+            }
+          }
+        },
+        {
+          "id": "deepseek-v4-pro",
+          "name": "DeepSeek V4 Pro",
+          "reasoning": true,
+          "input": [
+            "text"
+          ],
+          "contextWindow": 1000000,
+          "maxTokens": 384000,
+          "cost": {
+            "input": 0.435,
+            "output": 0.87,
+            "cacheRead": 0.0036,
+            "cacheWrite": 0
+          },
+          "compat": {
+            "requiresReasoningContentOnAssistantMessages": true,
+            "supportsDeveloperRole": false,
+            "thinkingFormat": "deepseek",
+            "reasoningEffortMap": {
+              "minimal": "high",
+              "low": "high",
+              "medium": "high",
+              "high": "high",
+              "xhigh": "max"
+            }
+          }
+        },
+        {
+          "id": "mimo-v2.5",
+          "name": "Mimo v2.5",
+          "reasoning": true,
+          "input": [
+            "text"
+          ],
+          "contextWindow": 1000000,
+          "maxTokens": 384000,
+          "cost": {
+            "input": 0.14,
+            "output": 0.28,
+            "cacheRead": 0.0028,
+            "cacheWrite": 0
+          },
+          "compat": {
+            "requiresReasoningContentOnAssistantMessages": true,
+            "supportsDeveloperRole": false,
+            "thinkingFormat": "mimo",
+            "reasoningEffortMap": {
+              "minimal": "high",
+              "low": "high",
+              "medium": "high",
+              "high": "high",
+              "xhigh": "max"
+            }
+          }
+        },
+        {
+          "id": "glm-5.1",
+          "name": "GLM 5.1",
+          "reasoning": true,
+          "input": [
+            "text"
+          ],
+          "contextWindow": 214000,
+          "maxTokens": 38400,
+          "compat": {
+            "requiresReasoningContentOnAssistantMessages": true,
+            "supportsDeveloperRole": false,
+            "thinkingFormat": "mimo",
+            "reasoningEffortMap": {
+              "minimal": "high",
+              "low": "high",
+              "medium": "high",
+              "high": "high",
+              "xhigh": "max"
+            }
+          }
+        },
+        {
+          "id": "glm-5.2",
+          "name": "GLM 5.2",
+          "reasoning": true,
+          "input": [
+            "text"
+          ],
+          "contextWindow": 214000,
+          "maxTokens": 38400,
+          "compat": {
+            "requiresReasoningContentOnAssistantMessages": true,
+            "supportsDeveloperRole": false,
+            "thinkingFormat": "mimo",
+            "reasoningEffortMap": {
+              "minimal": "high",
+              "low": "high",
+              "medium": "high",
+              "high": "high",
+              "xhigh": "max"
+            }
+          }
+        },
+        {
+          "id": "gpt-5.4",
+          "name": "GPT 5.4",
+          "reasoning": true,
+          "input": [
+            "text"
+          ],
+          "contextWindow": 214000,
+          "maxTokens": 38400,
+          "compat": {
+            "requiresReasoningContentOnAssistantMessages": true,
+            "supportsDeveloperRole": false,
+            "thinkingFormat": "mimo",
+            "reasoningEffortMap": {
+              "minimal": "high",
+              "low": "high",
+              "medium": "high",
+              "high": "high",
+              "xhigh": "max"
+            }
+          }
+        }
+      ]
+    },
+    "Public welfare": {
+      "baseUrl": "https://sub.nikoniko.qzz.io/v1",
+      "api": "openai-responses",
+      "apiKey": "$PUBLIS_WELFARE",
+      "authHeader": true,
+      "headers": {
+        "User-Agent": "codex-tui/0.132.0 (Debian 13.0.0; x86_64) ghostty/1.3.1 (codex-tui; 0.132.0)"
+      },
+      "models": [
+        {
+          "id": "gpt-5.5",
+          "name": "GPT 5.5",
+          "input": [
+            "text",
+            "image"
+          ],
+          "reasoning": true,
+          "contextWindow": 214000,
+          "maxTokens": 32000,
+          "compat": {
+            "requiresReasoningContentOnAssistantMessages": true,
+            "thinkingFormat": "gpt"
+          }
+        }
+      ]
+    }
+  }
+}

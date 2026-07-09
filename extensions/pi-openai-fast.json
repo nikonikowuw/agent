@@ -1,0 +1,9 @@
+{
+  "persistState": true,
+  "active": false,
+  "supportedModels": [
+    "PublicWelfare/gpt-5.4",
+    "PublicWelfare/gpt-5.5",
+    "Codex/gpt-5.5"
+  ]
+}
