@@ -2,7 +2,7 @@
   "providers": {
     "Chinese": {
       "api": "openai-completions",
-      "baseUrl": "https://sub.nikoniko.us.ci/v1",
+      "baseUrl": "https://sub.nikonikoone.xyz/v1",
       "apiKey": "$SUB2API_OTHER",
       "authHeader": true,
       "headers": {
@@ -161,8 +161,8 @@
         }
       ]
     },
-    "Public welfare": {
-      "baseUrl": "https://sub.nikoniko.qzz.io/v1",
+    "Transfer Station": {
+      "baseUrl": "https://sub.nikonikoone.xyz/v1",
       "api": "openai-responses",
       "apiKey": "$PUBLIS_WELFARE",
       "authHeader": true,
@@ -184,6 +184,16 @@
             "requiresReasoningContentOnAssistantMessages": true,
             "thinkingFormat": "gpt"
           }
+        },
+                {
+          "id": "grok-4.5",
+          "name": "Grok 4.5",
+          "input": [
+            "text"
+          ],
+          "reasoning": true,
+          "contextWindow": 214000,
+          "maxTokens": 32000
         }
       ]
     }

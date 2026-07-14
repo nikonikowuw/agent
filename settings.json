@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "0.80.3",
+  "lastChangelogVersion": "0.80.6",
   "theme": "codex",
   "quietStartup": true,
   "defaultProvider": "Chinese",
@@ -17,9 +17,9 @@
     "npm:@ff-labs/pi-fff",
     "npm:@benvargas/pi-openai-fast",
     "npm:pi-intercom",
-    "npm:pi-powerline-footer",
-    "npm:@gotgenes/pi-subagents",
-    "npm:pi-wtf"
+    "npm:pi-wtf",
+    "npm:@tintinweb/pi-subagents",
+    "npm:@firstpick/pi-extension-git-footer-status"
   ],
   "retry": {
     "enabled": true,
