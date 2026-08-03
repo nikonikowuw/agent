@@ -1,12 +1,12 @@
 {
   "providers": {
-    "Chinese": {
-      "api": "openai-completions",
-      "baseUrl": "https://sub.nikonikoone.xyz/v1",
-      "apiKey": "$SUB2API_OTHER",
+    "cliproxy": {
+      "api": "openai-responses",
+      "baseUrl": "https://api.nikonikoone.xyz/v1",
+      "apiKey": "$CLIPROXYAPI",
       "authHeader": true,
       "headers": {
-        "User-Agent": "claude-cli/2.1.177 (external, cli)"
+        "User-Agent": "pi/0.83.0"
       },
       "models": [
         {
@@ -23,18 +23,6 @@
             "output": 0.28,
             "cacheRead": 0.0028,
             "cacheWrite": 0
-          },
-          "compat": {
-            "requiresReasoningContentOnAssistantMessages": true,
-            "supportsDeveloperRole": false,
-            "thinkingFormat": "deepseek",
-            "reasoningEffortMap": {
-              "minimal": "high",
-              "low": "high",
-              "medium": "high",
-              "high": "high",
-              "xhigh": "max"
-            }
           }
         },
         {
@@ -51,149 +39,120 @@
             "output": 0.87,
             "cacheRead": 0.0036,
             "cacheWrite": 0
-          },
-          "compat": {
-            "requiresReasoningContentOnAssistantMessages": true,
-            "supportsDeveloperRole": false,
-            "thinkingFormat": "deepseek",
-            "reasoningEffortMap": {
-              "minimal": "high",
-              "low": "high",
-              "medium": "high",
-              "high": "high",
-              "xhigh": "max"
-            }
           }
         },
         {
-          "id": "mimo-v2.5",
-          "name": "Mimo v2.5",
+          "id": "claude-opus-4-6-thinking",
+          "name": "claude opus 4-6 thinking",
           "reasoning": true,
-          "input": [
-            "text"
-          ],
-          "contextWindow": 1000000,
-          "maxTokens": 384000,
-          "cost": {
-            "input": 0.14,
-            "output": 0.28,
-            "cacheRead": 0.0028,
-            "cacheWrite": 0
-          },
-          "compat": {
-            "requiresReasoningContentOnAssistantMessages": true,
-            "supportsDeveloperRole": false,
-            "thinkingFormat": "mimo",
-            "reasoningEffortMap": {
-              "minimal": "high",
-              "low": "high",
-              "medium": "high",
-              "high": "high",
-              "xhigh": "max"
-            }
-          }
-        },
-        {
-          "id": "glm-5.1",
-          "name": "GLM 5.1",
-          "reasoning": true,
-          "input": [
-            "text"
-          ],
-          "contextWindow": 214000,
-          "maxTokens": 38400,
-          "compat": {
-            "requiresReasoningContentOnAssistantMessages": true,
-            "supportsDeveloperRole": false,
-            "thinkingFormat": "mimo",
-            "reasoningEffortMap": {
-              "minimal": "high",
-              "low": "high",
-              "medium": "high",
-              "high": "high",
-              "xhigh": "max"
-            }
-          }
-        },
-        {
-          "id": "glm-5.2",
-          "name": "GLM 5.2",
-          "reasoning": true,
-          "input": [
-            "text"
-          ],
-          "contextWindow": 214000,
-          "maxTokens": 38400,
-          "compat": {
-            "requiresReasoningContentOnAssistantMessages": true,
-            "supportsDeveloperRole": false,
-            "thinkingFormat": "mimo",
-            "reasoningEffortMap": {
-              "minimal": "high",
-              "low": "high",
-              "medium": "high",
-              "high": "high",
-              "xhigh": "max"
-            }
-          }
-        },
-        {
-          "id": "gpt-5.4",
-          "name": "GPT 5.4",
-          "reasoning": true,
-          "input": [
-            "text"
-          ],
-          "contextWindow": 214000,
-          "maxTokens": 38400,
-          "compat": {
-            "requiresReasoningContentOnAssistantMessages": true,
-            "supportsDeveloperRole": false,
-            "thinkingFormat": "mimo",
-            "reasoningEffortMap": {
-              "minimal": "high",
-              "low": "high",
-              "medium": "high",
-              "high": "high",
-              "xhigh": "max"
-            }
-          }
-        }
-      ]
-    },
-    "Transfer Station": {
-      "baseUrl": "https://sub.nikonikoone.xyz/v1",
-      "api": "openai-responses",
-      "apiKey": "$PUBLIS_WELFARE",
-      "authHeader": true,
-      "headers": {
-        "User-Agent": "codex-tui/0.132.0 (Debian 13.0.0; x86_64) ghostty/1.3.1 (codex-tui; 0.132.0)"
-      },
-      "models": [
-        {
-          "id": "gpt-5.5",
-          "name": "GPT 5.5",
           "input": [
             "text",
             "image"
           ],
-          "reasoning": true,
           "contextWindow": 214000,
-          "maxTokens": 32000,
-          "compat": {
-            "requiresReasoningContentOnAssistantMessages": true,
-            "thinkingFormat": "gpt"
+          "maxTokens": 38400
+        },
+        {
+          "id": "gpt-5.6-terra",
+          "name": "Gpt 5.6 Terra",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ],
+          "contextWindow": 414000,
+          "maxTokens": 38400,
+          "cost": {
+            "input": 1,
+            "output": 6,
+            "cacheRead": 0.1,
+            "cacheWrite": 0
           }
         },
-                {
-          "id": "grok-4.5",
-          "name": "Grok 4.5",
-          "input": [
-            "text"
-          ],
+        {
+          "id": "gpt-5.6-luna",
+          "name": "Gpt 5.6 Luna",
           "reasoning": true,
-          "contextWindow": 214000,
-          "maxTokens": 32000
+          "input": [
+            "text",
+            "image"
+          ],
+          "contextWindow": 414000,
+          "maxTokens": 38400,
+          "cost": {
+            "input": 0.1,
+            "output": 0.6,
+            "cacheRead": 0.01,
+            "cacheWrite": 0
+          }
+        },
+        {
+          "id": "gpt-5.6-sol",
+          "name": "Gpt 5.6 Sol",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ],
+          "contextWindow": 414000,
+          "maxTokens": 38400,
+          "cost": {
+            "input": 5,
+            "output": 30,
+            "cacheRead": 0.5,
+            "cacheWrite": 0
+          }
+        },
+        {
+          "id": "gemini-3.1-pro",
+          "name": "Gemini 3.1 Pro",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ],
+          "contextWindow": 414000,
+          "maxTokens": 38400,
+          "cost": {
+            "input": 2,
+            "output": 12,
+            "cacheRead": 0.2,
+            "cacheWrite": 0
+          }
+        },
+        {
+          "id": "gemini-3.5-flash-low",
+          "name": "Gemini 3.5 Flash Medium",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ],
+          "contextWindow": 414000,
+          "maxTokens": 38400,
+          "cost": {
+            "input": 1.5,
+            "output": 9,
+            "cacheRead": 0.15,
+            "cacheWrite": 0
+          }
+        },
+        {
+          "id": "gemini-3.6-flash",
+          "name": "Gemini 3.6 Flash High",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ],
+          "contextWindow": 414000,
+          "maxTokens": 38400,
+          "cost": {
+            "input": 1.5,
+            "output": 7.5,
+            "cacheRead": 0.15,
+            "cacheWrite": 0
+          }
         }
       ]
     }

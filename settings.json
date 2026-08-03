@@ -1,10 +1,10 @@
 {
-  "lastChangelogVersion": "0.80.6",
+  "lastChangelogVersion": "0.83.0",
   "theme": "codex",
   "quietStartup": true,
-  "defaultProvider": "Chinese",
+  "defaultProvider": "cliproxy",
   "defaultModel": "deepseek-v4-flash",
-  "defaultThinkingLevel": "medium",
+  "defaultThinkingLevel": "max",
   "compaction": {
     "enabled": true,
     "reserveTokens": 16384,
@@ -12,23 +12,21 @@
   },
   "packages": [
     "npm:context-mode",
-    "npm:@narumitw/pi-goal",
     "npm:pi-web-access",
     "npm:@ff-labs/pi-fff",
-    "npm:@benvargas/pi-openai-fast",
-    "npm:pi-intercom",
     "npm:pi-wtf",
-    "npm:@tintinweb/pi-subagents",
-    "npm:@firstpick/pi-extension-git-footer-status"
+    "npm:@hypabolic/pi-hypa",
+    "npm:pi-model-manager",
+    "npm:pi-subagents"
   ],
   "retry": {
     "enabled": true,
-    "maxRetries": 3,
+    "maxRetries": 10,
     "baseDelayMs": 2000,
     "provider": {
-      "timeoutMs": 3600000,
+      "timeoutMs": 360000,
       "maxRetries": 0,
-      "maxRetryDelayMs": 60000
+      "maxRetryDelayMs": 30000
     }
   },
   "hideThinkingBlock": true,
@@ -37,5 +35,7 @@
   "enableInstallTelemetry": true,
   "defaultProjectTrust": "always",
   "steeringMode": "one-at-a-time",
-  "treeFilterMode": "all"
+  "treeFilterMode": "all",
+  "editorPaddingX": 0,
+  "outputPad": 0
 }
