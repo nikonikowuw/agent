@@ -3,13 +3,14 @@
   "private": true,
   "dependencies": {
     "@benvargas/pi-openai-fast": "^1.0.4",
-    "@ff-labs/pi-fff": "^0.9.6",
+    "@ff-labs/pi-fff": "^0.10.3",
     "@firstpick/pi-extension-git-footer-status": "^0.3.8",
+    "@hypabolic/pi-hypa": "^0.1.13",
     "@narumitw/pi-goal": "^0.14.1",
     "@tintinweb/pi-subagents": "^0.14.0",
-    "context-mode": "^1.0.169",
     "pi-intercom": "^0.6.0",
-    "pi-web-access": "^0.13.0",
+    "pi-subagents": "^0.45.1",
+    "pi-web-access": "^0.19.0",
     "pi-wtf": "^0.2.3"
   }
 }

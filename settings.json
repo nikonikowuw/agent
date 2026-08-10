@@ -1,22 +1,20 @@
 {
-  "lastChangelogVersion": "0.83.0",
+  "lastChangelogVersion": "0.84.1",
   "theme": "codex",
   "quietStartup": true,
-  "defaultProvider": "cliproxy",
-  "defaultModel": "deepseek-v4-flash",
-  "defaultThinkingLevel": "max",
+  "defaultProvider": "Antigravity",
+  "defaultModel": "gemini-3.1-pro",
+  "defaultThinkingLevel": "high",
   "compaction": {
     "enabled": true,
     "reserveTokens": 16384,
     "keepRecentTokens": 20000
   },
   "packages": [
-    "npm:context-mode",
     "npm:pi-web-access",
     "npm:@ff-labs/pi-fff",
     "npm:pi-wtf",
     "npm:@hypabolic/pi-hypa",
-    "npm:pi-model-manager",
     "npm:pi-subagents"
   ],
   "retry": {
@@ -37,5 +35,6 @@
   "steeringMode": "one-at-a-time",
   "treeFilterMode": "all",
   "editorPaddingX": 0,
-  "outputPad": 0
+  "outputPad": 0,
+  "tuiMode": "regular"
 }
