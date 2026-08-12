@@ -2,8 +2,8 @@
   "lastChangelogVersion": "0.84.1",
   "theme": "codex",
   "quietStartup": true,
-  "defaultProvider": "Antigravity",
-  "defaultModel": "gemini-3.1-pro",
+  "defaultProvider": "OpenCodeGo",
+  "defaultModel": "deepseek-v4-flash",
   "defaultThinkingLevel": "high",
   "compaction": {
     "enabled": true,
@@ -15,7 +15,8 @@
     "npm:@ff-labs/pi-fff",
     "npm:pi-wtf",
     "npm:@hypabolic/pi-hypa",
-    "npm:pi-subagents"
+    "npm:@tintinweb/pi-subagents",
+    "npm:@gotgenes/pi-permission-system"
   ],
   "retry": {
     "enabled": true,

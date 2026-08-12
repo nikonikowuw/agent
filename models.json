@@ -1,12 +1,16 @@
 {
     "providers": {
         "OpenCodeGo": {
-            "api": "openai-responses",
+            "api": "openai-completions",
             "baseUrl": "https://sub.nikonikoone.xyz/v1",
             "apiKey": "$OPENCODE_GO",
             "authHeader": true,
             "headers": {
                 "User-Agent": "pi/0.84.1"
+            },
+            "compat": {
+                "supportsReasoningEffort": true,
+                "supportsDeveloperRole": true
             },
             "models": [
                 {
@@ -31,14 +35,6 @@
                         "high": "high",
                         "xhigh": null,
                         "max": "max"
-                    },
-                    "compat": {
-                        "supportsStore": false,
-                        "maxTokensField": "max_tokens",
-                        "requiresReasoningContentOnAssistantMessages": true,
-                        "thinkingFormat": "deepseek",
-                        "supportsReasoningEffort": true,
-                        "supportsDeveloperRole": true
                     }
                 },
                 {
@@ -63,14 +59,6 @@
                         "high": "high",
                         "xhigh": null,
                         "max": "max"
-                    },
-                    "compat": {
-                        "supportsStore": false,
-                        "maxTokensField": "max_tokens",
-                        "requiresReasoningContentOnAssistantMessages": true,
-                        "thinkingFormat": "deepseek",
-                        "supportsReasoningEffort": true,
-                        "supportsDeveloperRole": true
                     }
                 }
             ]
@@ -182,7 +170,7 @@
                     }
                 },
                 {
-                    "id": "gemini-3.6-flash",
+                    "id": "gemini-3.6-flash-high",
                     "name": "Gemini 3.6 Flash",
                     "reasoning": true,
                     "input": [
