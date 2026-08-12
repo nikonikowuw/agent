@@ -5,12 +5,12 @@
     "@benvargas/pi-openai-fast": "^1.0.4",
     "@ff-labs/pi-fff": "^0.10.3",
     "@firstpick/pi-extension-git-footer-status": "^0.3.8",
+    "@gotgenes/pi-permission-system": "^25.0.0",
     "@hypabolic/pi-hypa": "^0.1.13",
     "@narumitw/pi-goal": "^0.14.1",
-    "@tintinweb/pi-subagents": "^0.14.0",
+    "@tintinweb/pi-subagents": "^0.15.0",
     "pi-intercom": "^0.6.0",
-    "pi-subagents": "^0.45.1",
-    "pi-web-access": "^0.19.0",
+    "pi-web-access": "^0.22.0",
     "pi-wtf": "^0.2.3"
   }
 }
