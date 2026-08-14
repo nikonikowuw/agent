@@ -8,7 +8,7 @@
       "*.env.example": "allow"
     },
     "bash": {
-      "*": "ask",
+      "*": "allow",
       "rm -rf *": "deny",
       "sudo *": "ask"
     },
