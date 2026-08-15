@@ -8,9 +8,11 @@
       "*.env.example": "allow"
     },
     "bash": {
-      "*": "ask",
+      "*": "allow",
       "rm -rf *": "deny",
-      "sudo *": "ask"
+      "sudo *": "ask",
+      "git push *": "ask",
+      "git push origin --delete": "deny"
     },
     "external_directory": "ask"
   }

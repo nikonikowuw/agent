@@ -1,10 +1,10 @@
 {
-  "lastChangelogVersion": "0.84.1",
+  "lastChangelogVersion": "0.84.2",
   "theme": "codex",
   "quietStartup": true,
   "defaultProvider": "OpenCodeGo",
   "defaultModel": "deepseek-v4-flash",
-  "defaultThinkingLevel": "high",
+  "defaultThinkingLevel": "max",
   "compaction": {
     "enabled": true,
     "reserveTokens": 16384,
@@ -16,7 +16,8 @@
     "npm:pi-wtf",
     "npm:@hypabolic/pi-hypa",
     "npm:@tintinweb/pi-subagents",
-    "npm:@gotgenes/pi-permission-system"
+    "npm:@gotgenes/pi-permission-system",
+    "npm:@juicesharp/rpiv-todo"
   ],
   "retry": {
     "enabled": true,

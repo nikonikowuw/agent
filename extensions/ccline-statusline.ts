@@ -1,10 +1,12 @@
-import { basename } from "node:path";
+import { homedir } from "node:os";
+import { basename, sep } from "node:path";
 import type {
 	ExtensionAPI,
 	ExtensionContext,
 	ReadonlyFooterDataProvider,
 	Theme,
 } from "@earendil-works/pi-coding-agent";
+import { VERSION } from "@earendil-works/pi-coding-agent";
 import { truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
 
 /**
@@ -18,10 +20,33 @@ import { truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
 const GIT_REFRESH_INTERVAL_MS = 15_000;
 const GIT_REFRESH_DEBOUNCE_MS = 250;
 const GIT_COMMAND_TIMEOUT_MS = 1_500;
+const RAINBOW_ANIMATION_INTERVAL_MS = 75;
+const RAINBOW_PHASE_STEP = 6;
+const RAINBOW_PHASE_CYCLE = 360;
 
 const ANSI_ESCAPE = /\x1b\](?:[^\x07]|\x07)*(?:\x07|\x1b\\)|\x1b\[[0-?]*[ -/]*[@-~]/g;
 
-type SegmentColor = "accent" | "success" | "warning" | "error" | "dim" | "muted";
+const PI_LOGO = [
+	"██████  ",
+	"██  ██  ",
+	"████  ██",
+	"██    ██",
+] as const;
+
+type SegmentColor =
+	| "accent"
+	| "success"
+	| "warning"
+	| "error"
+	| "dim"
+	| "muted"
+	| "thinkingOff"
+	| "thinkingMinimal"
+	| "thinkingLow"
+	| "thinkingMedium"
+	| "thinkingHigh"
+	| "thinkingXhigh"
+	| "rainbow";
 
 type Segment = {
 	name: string;
@@ -52,6 +77,7 @@ interface UsageTotals {
 interface RuntimeState {
 	turnCount: number;
 	thinkingLevel: string;
+	rainbowPhase: number;
 	isStreaming: boolean;
 	activeTools: Map<string, number>;
 	gitStatus?: GitStatus;
@@ -69,6 +95,7 @@ export default function cclineStatusline(pi: ExtensionAPI): void {
 	let requestRender: (() => void) | undefined;
 	let gitRefreshTimer: ReturnType<typeof setTimeout> | undefined;
 	let gitRefreshInterval: ReturnType<typeof setInterval> | undefined;
+	let rainbowAnimationTimer: ReturnType<typeof setInterval> | undefined;
 	let gitRefreshInFlight = false;
 	let pendingGitRefresh: { cwd: string; generation: number; requestId: number } | undefined;
 	let gitRequestId = 0;
@@ -76,6 +103,7 @@ export default function cclineStatusline(pi: ExtensionAPI): void {
 	const runtime: RuntimeState = {
 		turnCount: 0,
 		thinkingLevel: "off",
+		rainbowPhase: 0,
 		isStreaming: false,
 		activeTools: new Map(),
 		gitStatusKnown: false,
@@ -85,6 +113,27 @@ export default function cclineStatusline(pi: ExtensionAPI): void {
 	const render = () => requestRender?.();
 	const ownsContext = (ctx: ExtensionContext) =>
 		ctx.sessionManager === activeSessionManager && ctx.cwd === activeCwd;
+
+	const clearRainbowAnimation = () => {
+		if (rainbowAnimationTimer) {
+			clearInterval(rainbowAnimationTimer);
+			rainbowAnimationTimer = undefined;
+		}
+		runtime.rainbowPhase = 0;
+	};
+
+	const syncRainbowAnimation = () => {
+		if (!footerInstalled || runtime.thinkingLevel !== "max") {
+			clearRainbowAnimation();
+			return;
+		}
+		if (rainbowAnimationTimer) return;
+
+		rainbowAnimationTimer = setInterval(() => {
+			runtime.rainbowPhase = (runtime.rainbowPhase + RAINBOW_PHASE_STEP) % RAINBOW_PHASE_CYCLE;
+			render();
+		}, RAINBOW_ANIMATION_INTERVAL_MS);
+	};
 
 	const clearGitTimers = () => {
 		if (gitRefreshTimer) {
@@ -105,6 +154,7 @@ export default function cclineStatusline(pi: ExtensionAPI): void {
 			footerInstalled = false;
 		}
 		clearGitTimers();
+		clearRainbowAnimation();
 		requestRender = undefined;
 	};
 
@@ -168,6 +218,16 @@ export default function cclineStatusline(pi: ExtensionAPI): void {
 		}, GIT_REFRESH_DEBOUNCE_MS);
 	};
 
+	const installHeader = (ctx: ExtensionContext) => {
+		if (ctx.mode !== "tui") return;
+		ctx.ui.setHeader((_tui, theme) => ({
+			render(width: number): string[] {
+				return renderPiHeader(width, ctx, theme);
+			},
+			invalidate() {},
+		}));
+	};
+
 	const installFooter = (ctx: ExtensionContext, resetRuntime: boolean) => {
 		if (ctx.mode !== "tui" || !enabled) return;
 
@@ -181,6 +241,7 @@ export default function cclineStatusline(pi: ExtensionAPI): void {
 		if (resetRuntime) {
 			runtime.turnCount = 0;
 			runtime.thinkingLevel = pi.getThinkingLevel();
+			runtime.rainbowPhase = 0;
 			runtime.isStreaming = false;
 			runtime.activeTools.clear();
 			runtime.gitStatus = undefined;
@@ -191,6 +252,7 @@ export default function cclineStatusline(pi: ExtensionAPI): void {
 		footerInstalled = true;
 		ctx.ui.setFooter((tui, theme, footerData) => {
 			requestRender = () => tui.requestRender();
+			syncRainbowAnimation();
 
 			const unsubscribeBranch = footerData.onBranchChange(() => {
 				runtime.gitStatus = undefined;
@@ -210,6 +272,7 @@ export default function cclineStatusline(pi: ExtensionAPI): void {
 				dispose() {
 					unsubscribeBranch();
 					clearGitTimers();
+					clearRainbowAnimation();
 					if (generation === sessionGeneration) {
 						requestRender = undefined;
 						footerInstalled = false;
@@ -258,6 +321,7 @@ export default function cclineStatusline(pi: ExtensionAPI): void {
 		activeContext = ctx;
 		activeSessionManager = ctx.sessionManager;
 		activeCwd = ctx.cwd;
+		installHeader(ctx);
 		installFooter(ctx, true);
 	});
 
@@ -275,12 +339,15 @@ export default function cclineStatusline(pi: ExtensionAPI): void {
 	});
 
 	pi.on("model_select", (_event, ctx) => {
-		if (ownsContext(ctx)) render();
+		if (!ownsContext(ctx)) return;
+		syncRainbowAnimation();
+		render();
 	});
 
 	pi.on("thinking_level_select", (event, ctx) => {
 		if (!ownsContext(ctx)) return;
 		runtime.thinkingLevel = event.level;
+		syncRainbowAnimation();
 		render();
 	});
 
@@ -343,6 +410,40 @@ export default function cclineStatusline(pi: ExtensionAPI): void {
 	});
 }
 
+function renderPiHeader(width: number, ctx: ExtensionContext, theme: Theme): string[] {
+	if (width <= 0) return [];
+
+	const model = cleanText(ctx.model?.name || ctx.model?.id || "no-model");
+	const provider = cleanText(ctx.model?.provider || "no-provider");
+	const details = [
+		theme.fg("accent", `pi v${VERSION}`),
+		theme.fg("muted", `${model} · ${provider}`),
+		theme.fg("dim", formatHeaderPath(ctx.cwd)),
+	];
+	const gap = "  ";
+
+	return PI_LOGO.map((logoLine, index) => {
+		const logo = theme.fg("accent", logoLine);
+		const detail = details[index];
+		if (!detail) return truncateToWidth(logo, width, "");
+
+		const detailWidth = width - visibleWidth(logo) - visibleWidth(gap);
+		if (detailWidth <= 0) return truncateToWidth(logo, width, "");
+
+		return truncateToWidth(
+			`${logo}${gap}${truncateToWidth(detail, detailWidth, "")}`,
+			width,
+			"",
+		);
+	});
+}
+
+function formatHeaderPath(cwd: string): string {
+	const home = homedir();
+	if (cwd === home) return "~";
+	return cwd.startsWith(`${home}${sep}`) ? `~${sep}${cwd.slice(home.length + sep.length)}` : cwd;
+}
+
 function renderStatusline(
 	width: number,
 	ctx: ExtensionContext,
@@ -356,12 +457,12 @@ function renderStatusline(
 	const contextUsage = ctx.getContextUsage();
 	const segments: Segment[] = [];
 
-	const model = shortenModel(cleanText(ctx.model?.id ?? "no-model"));
+	const model = cleanText(ctx.model?.name || ctx.model?.id || "no-model");
 	segments.push({ name: "model", text: `🤖 ${model}`, color: "accent", priority: 100 });
 	segments.push({
 		name: "thinking",
 		text: `🧠 ${cleanText(runtime.thinkingLevel)}`,
-		color: runtime.thinkingLevel === "off" ? "dim" : "accent",
+		color: thinkingColor(runtime.thinkingLevel),
 		priority: 45,
 	});
 
@@ -434,13 +535,13 @@ function renderStatusline(
 
 	segments.push({ name: "time", text: `🕒 ${formatTime()}`, color: "dim", priority: 10 });
 
-	return fitSegments(segments, width, theme);
+	return fitSegments(segments, width, theme, runtime.rainbowPhase);
 }
 
-function fitSegments(segments: Segment[], width: number, theme: Theme): string {
+function fitSegments(segments: Segment[], width: number, theme: Theme, rainbowPhase: number): string {
 	let fitted = [...segments];
 	while (fitted.length > 1) {
-		const rendered = joinSegments(fitted, theme);
+		const rendered = joinSegments(fitted, theme, rainbowPhase);
 		if (visibleWidth(rendered) <= width) return rendered;
 
 		let removeIndex = 0;
@@ -450,12 +551,88 @@ function fitSegments(segments: Segment[], width: number, theme: Theme): string {
 		fitted.splice(removeIndex, 1);
 	}
 
-	return truncateToWidth(joinSegments(fitted, theme), Math.max(1, width), "");
+	return truncateToWidth(joinSegments(fitted, theme, rainbowPhase), Math.max(1, width), "");
 }
 
-function joinSegments(segments: Segment[], theme: Theme): string {
+function joinSegments(segments: Segment[], theme: Theme, rainbowPhase: number): string {
 	const separator = theme.fg("dim", " │ ");
-	return segments.map((segment) => theme.fg(segment.color, segment.text)).join(separator);
+	return segments.map((segment) => renderSegment(segment, theme, rainbowPhase)).join(separator);
+}
+
+function renderSegment(segment: Segment, theme: Theme, rainbowPhase: number): string {
+	if (segment.color === "rainbow") return rainbowText(segment.text, theme, rainbowPhase);
+	return theme.fg(segment.color, segment.text);
+}
+
+function rainbowText(text: string, theme: Theme, phase: number): string {
+	let colorIndex = 0;
+	return [...text]
+		.map((character) => {
+			if (/\s/.test(character)) return character;
+			const hue = phase + colorIndex * 48;
+			const [red, green, blue] = hsvToRgb(hue, 0.95, 1);
+			colorIndex += 1;
+			return `${foregroundAnsi(theme, red, green, blue)}${character}\x1b[39m`;
+		})
+		.join("");
+}
+
+function hsvToRgb(hue: number, saturation: number, value: number): [number, number, number] {
+	const normalizedHue = ((hue % 360) + 360) % 360;
+	const chroma = value * saturation;
+	const sector = normalizedHue / 60;
+	const x = chroma * (1 - Math.abs((sector % 2) - 1));
+	const match = value - chroma;
+	let red = 0;
+	let green = 0;
+	let blue = 0;
+
+	if (sector < 1) {
+		red = chroma;
+		green = x;
+	} else if (sector < 2) {
+		red = x;
+		green = chroma;
+	} else if (sector < 3) {
+		green = chroma;
+		blue = x;
+	} else if (sector < 4) {
+		green = x;
+		blue = chroma;
+	} else if (sector < 5) {
+		red = x;
+		blue = chroma;
+	} else {
+		red = chroma;
+		blue = x;
+	}
+
+	return [
+		Math.round((red + match) * 255),
+		Math.round((green + match) * 255),
+		Math.round((blue + match) * 255),
+	];
+}
+
+function foregroundAnsi(theme: Theme, red: number, green: number, blue: number): string {
+	if (theme.getColorMode() === "truecolor") return `\x1b[38;2;${red};${green};${blue}m`;
+	return `\x1b[38;5;${rgbToAnsi256(red, green, blue)}m`;
+}
+
+function rgbToAnsi256(red: number, green: number, blue: number): number {
+	const cubeRed = Math.round((red / 255) * 5);
+	const cubeGreen = Math.round((green / 255) * 5);
+	const cubeBlue = Math.round((blue / 255) * 5);
+	const cubeColor = 16 + 36 * cubeRed + 6 * cubeGreen + cubeBlue;
+	const cubeDistance = Math.hypot(red - cubeRed * 51, green - cubeGreen * 51, blue - cubeBlue * 51);
+
+	const gray = Math.round((red + green + blue) / 3);
+	const grayLevel = Math.max(0, Math.min(23, Math.round((gray - 8) / 10)));
+	const grayColor = 232 + grayLevel;
+	const grayValue = 8 + grayLevel * 10;
+	const grayDistance = Math.hypot(red - grayValue, green - grayValue, blue - grayValue);
+
+	return cubeDistance <= grayDistance ? cubeColor : grayColor;
 }
 
 function parseGitStatus(output: string): GitStatus | undefined {
@@ -555,6 +732,27 @@ function formatActivity(runtime: RuntimeState): string | undefined {
 	return runtime.isStreaming ? "💭 thinking" : undefined;
 }
 
+function thinkingColor(level: string): SegmentColor {
+	switch (level) {
+		case "off":
+			return "thinkingOff";
+		case "minimal":
+			return "thinkingMinimal";
+		case "low":
+			return "thinkingLow";
+		case "medium":
+			return "thinkingMedium";
+		case "high":
+			return "thinkingHigh";
+		case "xhigh":
+			return "thinkingXhigh";
+		case "max":
+			return "rainbow";
+		default:
+			return "accent";
+	}
+}
+
 function contextColor(percent: number | null | undefined): SegmentColor {
 	if (percent === null || percent === undefined) return "dim";
 	if (percent >= 90) return "error";
@@ -577,14 +775,6 @@ function formatCost(value: number): string {
 function formatTime(): string {
 	const now = new Date();
 	return `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
-}
-
-function shortenModel(model: string): string {
-	return model
-		.replace(/^claude-/, "")
-		.replace(/^gpt-/, "gpt ")
-		.replace(/-20\d{6}$/, "")
-		.replace(/-latest$/, "");
 }
 
 function cleanText(value: string): string {
