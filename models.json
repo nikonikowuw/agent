@@ -132,8 +132,8 @@
       },
       "models": [
         {
-          "id": "claude-opus-4-6-thinking",
-          "name": "Claude Opus 4.6 Thinking",
+          "id": "claude-opus-4-6",
+          "name": "Claude Opus 4.6",
           "reasoning": true,
           "input": ["text", "image"],
           "contextWindow": 214000,

@@ -10,7 +10,10 @@
     "bash": {
       "*": "allow",
       "rm -rf *": "deny",
-      "sudo *": "ask"
+      "sudo *": "ask",
+      "git push": "deny",
+      "find *": "allow",
+      "grep *": "allow"
     },
     "external_directory": "ask"
   }
