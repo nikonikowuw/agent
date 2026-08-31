@@ -1,9 +1,9 @@
 {
-  "lastChangelogVersion": "0.84.2",
+  "lastChangelogVersion": "0.84.4",
   "theme": "codex",
   "quietStartup": true,
-  "defaultProvider": "OpenCodeGo",
-  "defaultModel": "deepseek-v4-flash",
+  "defaultProvider": "GPT",
+  "defaultModel": "gemini-3.7-flash",
   "defaultThinkingLevel": "max",
   "compaction": {
     "enabled": true,
@@ -12,12 +12,9 @@
   },
   "packages": [
     "npm:pi-web-access",
-    "npm:@ff-labs/pi-fff",
-    "npm:pi-wtf",
-    "npm:@hypabolic/pi-hypa",
-    "npm:@tintinweb/pi-subagents",
-    "npm:@gotgenes/pi-permission-system",
-    "npm:@juicesharp/rpiv-todo"
+    "npm:pi-tool-display",
+    "npm:pi-ccline",
+    "npm:pi-wtf"
   ],
   "retry": {
     "enabled": true,
@@ -40,3 +37,4 @@
   "outputPad": 0,
   "tuiMode": "regular"
 }
+
